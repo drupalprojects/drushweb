@@ -1,0 +1,39 @@
+<?php
+/**
+ * @file
+ * Code for the Drush Remote feature.
+ */
+
+include_once 'drush_remote.features.inc';
+
+/**
+ * Implements hook_permission().
+ */
+function drush_remote_permission() {
+  return array(
+    'use drush remotely' => array(
+      'title' => 'Execute a Drush command remotely',
+    ),
+  );
+}
+
+/**
+ * Implements hook_services_resources().
+ */
+function drush_remote_services_resources() {
+  return array(
+    'drush' => array(
+      'actions' => array(
+        'execute' => array(
+          'callback' => '_drush_remote_execute',
+          //'access arguments' => array('use drush remotely'),
+          'help' => t('Execute a Drush command.'),
+        ),
+      ),
+    ),
+  );
+}
+
+function _drush_remote_execute() {
+  return 'test';
+}
