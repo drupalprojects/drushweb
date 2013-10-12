@@ -1,12 +1,11 @@
-name = Drush Remote
+name = Drush Remote Server
 description = Provides a remote access to drush commands.
 core = 7.x
 package = Administration
 version = 7.x-1.0
-project = drush_remote
+project = drush_remote_server
 dependencies[] = ctools
 dependencies[] = rest_server
 dependencies[] = services
 features[ctools][] = services:services:3
 features[features_api][] = api:2
-features[services_endpoint][] = drush_remote

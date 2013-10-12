@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * drush_remote.services.inc
+ * drush_remote_server.services.inc
  */
 
 /**
  * Implements hook_default_services_endpoint().
  */
-function drush_remote_default_services_endpoint() {
+function drush_remote_server_default_services_endpoint() {
   $export = array();
 
   $endpoint = new stdClass();

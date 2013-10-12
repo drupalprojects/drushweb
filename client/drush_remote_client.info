@@ -1,0 +1,7 @@
+name = Drush Remote Client
+description = Drush script to communicate with Drush Remote Server.
+core = 7.x
+package = Administration
+version = 7.x-1.0
+project = drush_remote_client
+dependencies[] = http_client
