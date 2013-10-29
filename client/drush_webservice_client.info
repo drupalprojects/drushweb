@@ -1,0 +1,7 @@
+name = Drush Webservice Client
+description = Drush script to communicate with Drush Webservice Server.
+core = 7.x
+package = Administration
+version = 7.x-1.0
+project = drush_webservice_client
+dependencies[] = http_client

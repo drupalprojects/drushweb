@@ -1,48 +1,49 @@
 <?php
 /**
  * @file
- * Drush Remote Client module drush integration.
+ * Drush Webservice Client module drush integration.
  */
 
 
 // Webservice path on the server.
-define('DRUSH_REMOTE_WS_PATH', 'drush-remote/drush/execute');
+define('DRUSH_WEBSERVICE_PATH', 'drush-webservice/drush/execute');
 
 /**
  * Implements hook_drush_command().
  */
-function drush_remote_client_drush_command() {
-  $items['remote'] = array(
-    'description' => 'Execute a drush command remotely.',
+function drush_webservice_client_drush_command() {
+  $items['webservice'] = array(
+    'description' => 'Execute a drush command on a site running Drush Webservice Server.',
     'arguments' => array(
       'command' => 'A drush command to execute on the server.',
     ),
     'examples' => array(
-      'drush remote enable views' => 'Enable module views on a remote site.',
+      'drush webservice enable views' => 'Enable module views on a site.',
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
+  // TODO alias webservice -> ws
   return $items;
 }
 
 /**
  * Implements drush_hook_COMMAND().
  */
-function drush_drush_remote_client_remote() {
+function drush_drush_webservice_client_webservice() {
   $authentication = NULL;
   $formatter = new HttpClientBaseFormatter(HttpClientBaseFormatter::FORMAT_JSON);
   $client = new HttpClient($authentication, $formatter);
 
-  // List args + options and remove bin name + 'remote'.
+  // List args + options and remove bin name + 'webservice'.
   $argv = drush_get_context('argv');
   unset($argv[0]);
-  if ($key = array_search('remote', $argv)) {
+  if ($key = array_search('webservice', $argv)) {
     unset($argv[$key]);
   }
 
   global $base_url;
-  // TODO remote / ?
-  $request = new HttpClientRequest("$base_url/?q=" . DRUSH_REMOTE_WS_PATH, array(
+  // TODO webservice / ?
+  $request = new HttpClientRequest("$base_url/?q=" . DRUSH_WEBSERVICE_PATH, array(
     'method' => 'POST',
     'parameters' => NULL,
     'data' => implode(' ', $argv),
