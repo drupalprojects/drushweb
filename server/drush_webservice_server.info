@@ -1,9 +1,9 @@
-name = Drush Remote Server
-description = Provides a remote access to drush commands.
+name = Drush Webservice Server
+description = Exposes Drush as a webservice.
 core = 7.x
 package = Administration
 version = 7.x-1.0
-project = drush_remote_server
+project = drush_webservice_server
 dependencies[] = ctools
 dependencies[] = rest_server
 dependencies[] = services

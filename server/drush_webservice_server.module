@@ -1,18 +1,18 @@
 <?php
 /**
  * @file
- * Code for the Drush Remote Server feature.
+ * Code for the Drush Webservice Server feature.
  */
 
-include_once 'drush_remote_server.features.inc';
+include_once 'drush_webservice_server.features.inc';
 
 /**
  * Implements hook_permission().
  */
-function drush_remote_server_permission() {
+function drush_webservice_server_permission() {
   return array(
-    'use drush remotely' => array(
-      'title' => 'Execute a Drush command remotely',
+    'use drush webservice' => array(
+      'title' => 'Execute a command using Drush Webservice',
     ),
   );
 }
@@ -20,13 +20,13 @@ function drush_remote_server_permission() {
 /**
  * Implements hook_services_resources().
  */
-function drush_remote_server_services_resources() {
+function drush_webservice_server_services_resources() {
   return array(
     'drush' => array(
       'actions' => array(
         'execute' => array(
-          'callback' => '_drush_remote_server_execute',
-          'access arguments' => array('use drush remotely'),
+          'callback' => '_drush_webservice_server_execute',
+          'access arguments' => array('use drush webservice'),
           'help' => t('Execute a Drush command.'),
           'args' => array(
             array(
@@ -48,14 +48,14 @@ function drush_remote_server_services_resources() {
  *
  * Execute a Drush command and return output.
  */
-function _drush_remote_server_execute($command) {
+function _drush_webservice_server_execute($command) {
   // TODO status report = warning if drush not in libraries
   // TODO dep = libraries
   // TODO use libraries API
   $drush = '/var/www/d7_features/sites/all/libraries/drush/drush.php';
   //TODO drush_escapeshellarg()
   ob_start();
-  print shell_exec("$drush $command --drush-remote=y 2>&1");
+  print shell_exec("$drush $command --drush-webservice=y 2>&1");
   return ob_get_clean();
 }
 
