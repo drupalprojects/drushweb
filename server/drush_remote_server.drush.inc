@@ -8,6 +8,10 @@
 function drush_remote_server_drush_init() {
   if (drush_get_option('drush-remote')) {
     drush_set_context('DRUSH_LOG_CALLBACK', '_drush_remote_server_print_log');
+    // Set --no by default until we support interactive interface TODO
+    if (!drush_get_option('no') && !drush_get_option('yes')) {
+      drush_set_context('DRUSH_NEGATIVE', TRUE);
+    }
   }
 }
 

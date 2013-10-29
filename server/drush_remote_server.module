@@ -53,10 +53,12 @@ function _drush_remote_server_execute($command) {
   // TODO dep = libraries
   // TODO use libraries API
   $drush = '/var/www/d7_features/sites/all/libraries/drush/drush.php';
+  //TODO drush_escapeshellarg()
   ob_start();
-  system("$drush $command");
+  print shell_exec("$drush $command --drush-remote=y 2>&1");
   return ob_get_clean();
 }
 
 // TODO see txt file on desktop
 // TODO set perm
+// TODO test on windows
