@@ -17,7 +17,11 @@ function drushweb_server_default_services_endpoint() {
   $endpoint->server = 'rest_server';
   $endpoint->path = 'drushweb';
   $endpoint->authentication = array(
-    'services' => 'services',
+    'services_oauth' => array(
+      'oauth_context' => 'drushweb',
+      'credentials' => 'consumer',
+      'authorization' => '',
+    ),
   );
   $endpoint->server_settings = array(
     'formatters' => array(
@@ -30,10 +34,10 @@ function drushweb_server_default_services_endpoint() {
     'parsers' => array(
       'application/json' => TRUE,
       'application/vnd.php.serialized' => TRUE,
+      'application/x-www-form-urlencoded' => TRUE,
       'application/xml' => TRUE,
       'multipart/form-data' => TRUE,
       'text/xml' => TRUE,
-      'application/x-www-form-urlencoded' => FALSE,
     ),
   );
   $endpoint->resources = array(
@@ -41,6 +45,12 @@ function drushweb_server_default_services_endpoint() {
       'actions' => array(
         'execute' => array(
           'enabled' => '1',
+          'settings' => array(
+            'services_oauth' => array(
+              'credentials' => 'consumer',
+              'authorization' => 'drushweb',
+            ),
+          ),
         ),
       ),
     ),

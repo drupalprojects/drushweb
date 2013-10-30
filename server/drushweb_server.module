@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Code for the Drush Webservice Server feature.
+ * Code for the Drush webservice Server feature.
  */
 
 include_once 'drushweb_server.features.inc';
@@ -81,3 +81,6 @@ function _drushweb_server_execute($command) {
 // TODO see txt file on desktop
 // TODO set perm
 // TODO test on windows
+// TODO admin/config/services/oauth/add fill in auth messages
+// TODO set 3-legged oauth config
+// TODO create role with oauth + drushweb perms

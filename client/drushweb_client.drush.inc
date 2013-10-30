@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Drush Webservice Client module drush integration.
+ * Drush webservice Client module drush integration.
  */
 
 
@@ -13,7 +13,7 @@ define('DRUSHWEB_PATH', 'drushweb/drush/execute');
  */
 function drushweb_client_drush_command() {
   $items['webservice'] = array(
-    'description' => 'Execute a drush command on a site running Drush Webservice Server.',
+    'description' => 'Execute a drush command on a site running Drush webservice Server.',
     'arguments' => array(
       'command' => 'A drush command to execute on the server.',
     ),
@@ -30,9 +30,14 @@ function drushweb_client_drush_command() {
  * Implements drush_hook_COMMAND().
  */
 function drush_drushweb_client_webservice() {
-  $authentication = NULL;
-  $formatter = new HttpClientBaseFormatter(HttpClientBaseFormatter::FORMAT_JSON);
-  $client = new HttpClient($authentication, $formatter);
+
+  // TODO make this dynamic
+  $consumer_key = 'y4ZYMrw8VNMDsnkibMxwu8ZybS4GPzHV';
+  $consumer_secret = 'JHjnXtfpLxrPCVwnjyn8dCQmsxNmgfEZ';
+
+  $sign = new OAuthSignatureMethod_HMAC('SHA1');
+  $auth = new HttpClientOAuth($consumer_key, NULL, $sign);
+  $client = http_client($auth);
 
   global $base_url;
   $commands = drush_get_command();
@@ -41,14 +46,15 @@ function drush_drushweb_client_webservice() {
   if (drush_get_context('DRUSH_AFFIRMATIVE')) {
     $commands[] = '--yes';
   }
-  // TODO webservice / ?
-  $request = new HttpClientRequest("$base_url/?q=" . DRUSHWEB_PATH, array(
-    'method' => 'POST',
-    'parameters' => NULL,
-    'data' => implode(' ', $commands),
-  ));
   try {
-    $response = $client->execute($request);
+    // TODO webservice / ?
+    $response = $client->post(
+      "$base_url/?q=" . DRUSHWEB_PATH,
+      array(
+        'parameters' => NULL,
+        'data' => implode(' ', $commands),
+      )
+    );
   }
   catch (HttpClientException $e) {
     $msg = dt('Failed to communicate with the server: !msg', array('!msg' => $e->getMessage()));
@@ -72,3 +78,5 @@ function drush_drushweb_client_webservice() {
 }
 
 // TODO HTTP headers = do not cache response
+// TODO check PHP prerequisites on client (see #1871498) - or let http_client take care or this
+// TODO oauth config -> request a token
