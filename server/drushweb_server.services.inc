@@ -1,21 +1,21 @@
 <?php
 /**
  * @file
- * drush_webservice_server.services.inc
+ * drushweb_server.services.inc
  */
 
 /**
  * Implements hook_default_services_endpoint().
  */
-function drush_webservice_server_default_services_endpoint() {
+function drushweb_server_default_services_endpoint() {
   $export = array();
 
   $endpoint = new stdClass();
   $endpoint->disabled = FALSE; /* Edit this to true to make a default endpoint disabled initially */
   $endpoint->api_version = 3;
-  $endpoint->name = 'drush_webservice';
+  $endpoint->name = 'drushweb';
   $endpoint->server = 'rest_server';
-  $endpoint->path = 'drush-webservice';
+  $endpoint->path = 'drushweb';
   $endpoint->authentication = array(
     'services' => 'services',
   );
@@ -46,7 +46,7 @@ function drush_webservice_server_default_services_endpoint() {
     ),
   );
   $endpoint->debug = 0;
-  $export['drush_webservice'] = $endpoint;
+  $export['drushweb'] = $endpoint;
 
   return $export;
 }

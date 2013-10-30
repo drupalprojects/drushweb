@@ -6,12 +6,12 @@
 
 
 // Webservice path on the server.
-define('DRUSH_WEBSERVICE_PATH', 'drush-webservice/drush/execute');
+define('DRUSHWEB_PATH', 'drushweb/drush/execute');
 
 /**
  * Implements hook_drush_command().
  */
-function drush_webservice_client_drush_command() {
+function drushweb_client_drush_command() {
   $items['webservice'] = array(
     'description' => 'Execute a drush command on a site running Drush Webservice Server.',
     'arguments' => array(
@@ -21,32 +21,31 @@ function drush_webservice_client_drush_command() {
       'drush webservice enable views' => 'Enable module views on a site.',
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+    'aliases' => array('web'),
   );
-  // TODO alias webservice -> ws
   return $items;
 }
 
 /**
  * Implements drush_hook_COMMAND().
  */
-function drush_drush_webservice_client_webservice() {
+function drush_drushweb_client_webservice() {
   $authentication = NULL;
   $formatter = new HttpClientBaseFormatter(HttpClientBaseFormatter::FORMAT_JSON);
   $client = new HttpClient($authentication, $formatter);
 
-  // List args + options and remove bin name + 'webservice'.
-  $argv = drush_get_context('argv');
-  unset($argv[0]);
-  if ($key = array_search('webservice', $argv)) {
-    unset($argv[$key]);
-  }
-
   global $base_url;
+  $commands = drush_get_command();
+  $commands = $commands['arguments'];
+  // TODO support all options ?
+  if (drush_get_context('DRUSH_AFFIRMATIVE')) {
+    $commands[] = '--yes';
+  }
   // TODO webservice / ?
-  $request = new HttpClientRequest("$base_url/?q=" . DRUSH_WEBSERVICE_PATH, array(
+  $request = new HttpClientRequest("$base_url/?q=" . DRUSHWEB_PATH, array(
     'method' => 'POST',
     'parameters' => NULL,
-    'data' => implode(' ', $argv),
+    'data' => implode(' ', $commands),
   ));
   try {
     $response = $client->execute($request);

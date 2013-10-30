@@ -1,0 +1,83 @@
+<?php
+/**
+ * @file
+ * Code for the Drush Webservice Server feature.
+ */
+
+include_once 'drushweb_server.features.inc';
+
+/**
+ * Implements hook_permission().
+ */
+function drushweb_server_permission() {
+  return array(
+    'use drush webservice' => array(
+      'title' => 'Execute a command remotely',
+    ),
+  );
+}
+
+/**
+ * Implements hook_services_resources().
+ */
+function drushweb_server_services_resources() {
+  return array(
+    'drush' => array(
+      'actions' => array(
+        'execute' => array(
+          'callback' => '_drushweb_server_execute',
+          'access arguments' => array('use drush webservice'),
+          'help' => t('Execute a Drush command.'),
+          'args' => array(
+            array(
+              'name' => 'command',
+              'optional' => FALSE,
+              'source' => 'data',
+              'description' => t('The Drush command to execute.'),
+              'type' => 'string',
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_libraries_info.
+ *
+ * TODO add file detection (key 'files')
+ */
+function drushweb_server_libraries_info() {
+  $libraries['drush'] = array(
+    'name' => 'Drush',
+    'vendor url' => 'http://drush.org',
+    'download url' => 'https://github.com/drush-ops/drush',
+    'version arguments' => array(
+      'file' => 'drush.info',
+      'pattern' => '@drush_version=([0-9\.a-z]+)@',
+      'lines' => 5,
+    ),
+  );
+  return $libraries;
+}
+
+/**
+ * Webservice callback.
+ *
+ * Execute a Drush command and return output.
+ */
+function _drushweb_server_execute($command) {
+  if (!($library = libraries_detect('drush')) || empty($library['installed'])) {
+    return $library['error message'];
+  }
+  $bin = DRUPAL_ROOT . '/' . libraries_get_path('drush') . '/drush.php';
+  //TODO drush_escapeshellarg()
+  ob_start();
+  print shell_exec("$bin $command --drushweb=y 2>&1");
+  return ob_get_clean();
+}
+
+// TODO see txt file on desktop
+// TODO set perm
+// TODO test on windows

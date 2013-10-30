@@ -1,10 +1,11 @@
-name = Drush Webservice Server
+name = Drush webservice Server
 description = Exposes Drush as a webservice.
 core = 7.x
 package = Administration
 version = 7.x-1.0
-project = drush_webservice_server
+project = drushweb_server
 dependencies[] = ctools
+dependencies[] = libraries (2.x)
 dependencies[] = rest_server
 dependencies[] = services
 features[ctools][] = services:services:3
