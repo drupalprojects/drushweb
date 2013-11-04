@@ -7,17 +7,6 @@
 include_once 'drushweb_server.features.inc';
 
 /**
- * Implements hook_permission().
- */
-function drushweb_server_permission() {
-  return array(
-    'use drush webservice' => array(
-      'title' => 'Execute a command remotely',
-    ),
-  );
-}
-
-/**
  * Implements hook_services_resources().
  */
 function drushweb_server_services_resources() {
@@ -26,7 +15,7 @@ function drushweb_server_services_resources() {
       'actions' => array(
         'execute' => array(
           'callback' => '_drushweb_server_execute',
-          'access arguments' => array('use drush webservice'),
+          'access arguments' => array('oauth register consumers in drushweb'),
           'help' => t('Execute a Drush command.'),
           'args' => array(
             array(
@@ -68,19 +57,26 @@ function drushweb_server_libraries_info() {
  * Execute a Drush command and return output.
  */
 function _drushweb_server_execute($command) {
+  // Locate Drush.
   if (!($library = libraries_detect('drush')) || empty($library['installed'])) {
     return $library['error message'];
   }
   $bin = DRUPAL_ROOT . '/' . libraries_get_path('drush') . '/drush.php';
-  //TODO drush_escapeshellarg()
+  
+  // Sanitize command.
+  $parts = explode(' ', $command);
+  foreach ($parts as &$part) {
+    $part = escapeshellarg($part);
+  }
+  $command = implode(' ', $parts);
+
+  // Execute command and return output.
   ob_start();
   print shell_exec("$bin $command --drushweb=y 2>&1");
   return ob_get_clean();
 }
 
 // TODO see txt file on desktop
-// TODO set perm
 // TODO test on windows
 // TODO admin/config/services/oauth/add fill in auth messages
 // TODO set 3-legged oauth config
-// TODO create role with oauth + drushweb perms

@@ -19,8 +19,8 @@ function drushweb_server_default_services_endpoint() {
   $endpoint->authentication = array(
     'services_oauth' => array(
       'oauth_context' => 'drushweb',
+      'authorization' => 'drushweb',
       'credentials' => 'consumer',
-      'authorization' => '',
     ),
   );
   $endpoint->server_settings = array(
