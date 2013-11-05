@@ -9,15 +9,38 @@
  */
 function drushweb_client_drush_command() {
   $items['webservice'] = array(
-    'description' => 'Execute a drush command on a site running Drush webservice Server.',
+    'description' => 'Execute the command on a site that runs Drush webservice Server.',
     'arguments' => array(
       'command' => 'A drush command to execute on the server.',
     ),
+    'required-arguments' => TRUE,
+    'options' => array(
+      'uri' => array(
+        'description' => 'Remote site URI.',
+        'example_value' => 'http://example.com:80/mysite',
+        'value' => 'required',
+        'required' => TRUE,
+      ),
+      'oauth_consumer_key' => array(
+        'description' => 'OAuth consumer key.',
+        'example_value' => 'y4ZYMrw8VNMDsnkibMxwu8ZybS4GPzHV',
+        'value' => 'required',
+        'required' => TRUE,
+      ),
+      'oauth_consumer_secret' => array(
+        'description' => 'OAuth consumer secret.',
+        'example_value' => 'JHjnXtfpLxrPCVwnjyn8dCQmsxNmgfEZ',
+        'value' => 'required',
+        'required' => TRUE,
+      ),
+    ),
     'examples' => array(
-      'drush webservice enable views' => 'Enable module views on a site.',
+      'drush webservice enable field' => 'Enable module field on a site.',
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
     'aliases' => array('web'),
+    //TODO drupal dependencies / drush dependencies
+    //TODO allow-addition-options ? cf core-rsync
   );
   return $items;
 }
@@ -26,6 +49,7 @@ function drushweb_client_drush_command() {
  * Implements drush_hook_COMMAND().
  */
 function drush_drushweb_client_webservice() {
+  // Format command to be sent.
   $cmd = drush_get_command();
   $cmd = $cmd['arguments'];
   if (drush_get_context('DRUSH_AFFIRMATIVE')) {// TODO support all options ? --verbose etc
@@ -33,11 +57,15 @@ function drush_drushweb_client_webservice() {
   }
   $cmd = implode(' ', $cmd);
 
-  global $base_url;
-  $client = new DrushwebHttpClient($cmd);
+  // Get credentials.
+  $uri    = drush_get_option('uri');
+  $key    = drush_get_option('oauth_consumer_key');
+  $secret = drush_get_option('oauth_consumer_secret');
+
+  // Send and process request.
   try {
-    // Drupal's base url is a directory, so we append a slash to avoid a useless301 redirection.
-    $response = $client->execute($base_url . '/');
+    $client = new DrushwebHttpClient($cmd, $key, $secret);
+    $response = $client->execute($uri);
     _drushweb_client_print_response($response);
   }
   catch (HttpClientException $e) {
@@ -53,8 +81,6 @@ function drush_drushweb_client_webservice() {
  *   Http response body.
  */
 function _drushweb_client_print_response($body) {
-  // TODO execute() might not return an array
-  // TODO the response might not be splittable with \n
   foreach ($body as $lines) {
     foreach (explode("\n", $lines) as $line) {
       $entry = json_decode($line);
@@ -71,6 +97,5 @@ function _drushweb_client_print_response($body) {
 
 
 // TODO check PHP prerequisites on client (see #1871498) - or let http_client take care or this
-// TODO msg if consumer key invalid
 // TODO check drush minimum version
 // TODO does it work when drushweb_client is disabled ?

@@ -2,15 +2,13 @@
 
 class DrushwebHttpClient {
   private $cmd;
-  private $consumer_key;
-  private $consumer_secret;
+  private $oauth_key;
+  private $oauth_secret;
 
-  public function __construct($cmd) {
+  public function __construct($cmd, $oauth_key, $oauth_secret) {
     $this->cmd = $cmd;
-    $this->response = array();
-    // TODO make this dynamic
-    $this->consumer_key = 'y4ZYMrw8VNMDsnkibMxwu8ZybS4GPzHV';
-    $this->consumer_secret = 'JHjnXtfpLxrPCVwnjyn8dCQmsxNmgfEZ';
+    $this->oauth_key = $oauth_key;
+    $this->oauth_secret = $oauth_secret;
   }
 
   /**
@@ -49,7 +47,7 @@ class DrushwebHttpClient {
    *   Authentication object.
    */
   protected function getAuth() {
-    $consumer = new DrupalOAuthConsumer($this->consumer_key, $this->consumer_secret);
+    $consumer = new DrupalOAuthConsumer($this->oauth_key, $this->oauth_secret);
     $sign = DrupalOAuthClient::signatureMethod();
     return new HttpClientOAuth($consumer, NULL, $sign, TRUE, TRUE);
   }
@@ -72,4 +70,5 @@ class DrushwebHttpClient {
     }
     return $headers;
   }
-  }
+
+}
