@@ -33,37 +33,41 @@ function drush_drushweb_client_webservice() {
   }
   $cmd = implode(' ', $cmd);
 
+  global $base_url;
+  $client = new DrushwebHttpClient($cmd);
   try {
-    $oauth = new DrushwebHttpClientOAuth($cmd);
-    $oauth->execute()->printReponse();
+    // Drupal's base url is a directory, so we append a slash to avoid a useless301 redirection.
+    $response = $client->execute($base_url . '/');
+    _drushweb_client_print_response($response);
   }
   catch (HttpClientException $e) {
-    switch ($e->getCode()) {
+    $msg = dt('Failed to communicate with the server: !msg', array('!msg' => $e->getMessage()));
+    return drush_user_abort($msg);
+  }
+}
 
-      // TODO support 3xx codes
-
-      case 401:
-        // TODO make creds storable somewhere
-        // TODO include realm 401 ?
-        drush_print($e->getMessage());
-        // TODO we support only basic http authentication
-        // TODO support password occultation
-        try {
-          $oauth_basic = new DrushwebHttpClientOAuthBasic($cmd);
-          $oauth_basic->execute()->printResponse();
-        }
-        catch (HttpClientException $e2) {
-          // TODO cleanly handle $e2 (user abort, 'failed to communicate' message etc)
-          drush_print($e2->getMessage());
-        }
-        break;
-
-      default:
-        $msg = dt('Failed to communicate with the server: !msg', array('!msg' => $e->getMessage()));
-        return drush_user_abort($msg);
+/**
+ * Format and print the body of the server response.
+ *
+ * @param $body
+ *   Http response body.
+ */
+function _drushweb_client_print_response($body) {
+  // TODO execute() might not return an array
+  // TODO the response might not be splittable with \n
+  foreach ($body as $lines) {
+    foreach (explode("\n", $lines) as $line) {
+      $entry = json_decode($line);
+      if (is_object($entry)) {
+        drush_log($entry->message, $entry->type, $entry->error);
+      }
+      else {
+        drush_print($line);
+      }
     }
   }
 }
+
 
 
 // TODO check PHP prerequisites on client (see #1871498) - or let http_client take care or this
