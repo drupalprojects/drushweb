@@ -4,6 +4,3 @@ core = 7.x
 package = Drush webservice
 version = 7.x-1.0
 project = drushweb_client
-files[] = includes/DrushwebHttpClient.inc
-dependencies[] = http_client
-dependencies[] = http_client_oauth
