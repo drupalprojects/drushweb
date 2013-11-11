@@ -112,7 +112,7 @@ class DrushwebHttpClient {
   public function execute($url) {
     // Normalize url and serialize data.
     $url = $this->normalize_http_url($url);
-    $data = drupal_json_encode($this->cmd);
+    $data = json_encode($this->cmd);
 
     // Build query parameters.
     $parameters = array(
@@ -143,7 +143,7 @@ class DrushwebHttpClient {
       case 204:
       case 205:
       case 206:
-        return drupal_json_decode($response->body);
+        return json_decode($response->body);
       case 301:
       case 302:
       case 303:
