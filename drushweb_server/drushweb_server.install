@@ -1,0 +1,28 @@
+<?php
+/**
+ * @file
+ * Code for the Drush webservice Server installation.
+ */
+
+
+/**
+ * Implements hook_requirements.
+ */
+function drushweb_server_requirements($phase) {
+  if ($phase == 'runtime') {
+    $requirement = array('title' => t('Drush as a library'));
+
+    if (!($library = libraries_detect('drush')) || empty($library['installed'])) {
+      $requirement['value']       = t('Not detected');
+      $requirement['description'] = $library['error message'];
+      $requirement['severity']    = REQUIREMENT_ERROR;
+    }
+    else {
+      $requirement['value']    = t('Detected (version @version)', array('@version' => $library['version']));
+      $requirement['severity'] = REQUIREMENT_OK;
+    }
+
+    return array('drushweb_server' => $requirement);
+  }
+}
+

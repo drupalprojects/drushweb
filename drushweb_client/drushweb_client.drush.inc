@@ -9,7 +9,7 @@
  */
 function drushweb_client_drush_command() {
   $items['webservice'] = array(
-    'description' => 'Execute the command on a site that runs Drush webservice Server.',
+    'description' => 'Execute the command on a site running Drush webservice Server.',
     'arguments' => array(
       'command' => 'A drush command to execute on the server.',
     ),
@@ -87,7 +87,6 @@ function drushweb_client_print_response($body) {
     }
   }
 }
-
 
 class DrushwebHttpClient {
   private $cmd;
@@ -308,7 +307,7 @@ class DrushwebHttpClient {
    *   Array of parameters, keyed by parameter key.
    * @return
    *   String in the form 'key1=val1&key2=val2'.
-   */
+  */
   public function build_http_query($params) {
     // Urlencode both keys and values
     $keys = $this->urlencode_rfc3986(array_keys($params));
