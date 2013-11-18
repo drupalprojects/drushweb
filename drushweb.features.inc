@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * drushweb_server.features.inc
+ * drushweb.features.inc
  */
 
 /**
  * Implements hook_ctools_plugin_api().
  */
-function drushweb_server_ctools_plugin_api($module = NULL, $api = NULL) {
+function drushweb_ctools_plugin_api($module = NULL, $api = NULL) {
   if ($module == "oauth_common" && $api == "oauth") {
     return array("version" => "1");
   }

@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * drushweb_server.services.inc
+ * drushweb.services.inc
  */
 
 /**
  * Implements hook_default_services_endpoint().
  */
-function drushweb_server_default_services_endpoint() {
+function drushweb_default_services_endpoint() {
   $export = array();
 
   $endpoint = new stdClass();
