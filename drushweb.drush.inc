@@ -55,6 +55,14 @@ function drushweb_drush_command() {
  * Implements drush_hook_COMMAND().
  */
 function drush_drushweb_webservice() {
+  // Check requirements.
+  if (!function_exists('curl_version')) {
+    return drush_user_abort(dt('Requirements not met: please use PHP compiled with cURL.'));
+  }
+  if (DRUSH_MAJOR_VERSION < 5) {
+    return drush_user_abort(dt('Requirements not met: please use Drush >= 5.0.0.'));
+  }
+
   // Format command to be sent.
   $cmd = implode(' ', drush_get_context('DRUSH_COMMAND_ARGS'));
 
@@ -355,12 +363,15 @@ class DrushwebHttpClient {
  */
 function drushweb_drush_init() {
   if (drush_get_option('drushweb')) {
+
     // Set custom log callback if command was sent from webservice client.
     drush_set_context('DRUSH_LOG_CALLBACK', 'drushweb_print_log');
+
     // Set --no by default (we do not support interactive interface).
     if (!drush_get_context('DRUSH_NEGATIVE') && !drush_get_context('DRUSH_AFFIRMATIVE')) {
       drush_set_context('DRUSH_NEGATIVE', TRUE);
     }
+
   }
 }
 

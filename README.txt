@@ -34,13 +34,13 @@ I - Server
  * services
  * libraries
  * PHP not in safe-mode (if PHP < 5.4.0)
- * PHP compiled with curl
  * Any version of Drush installed as a library is OK
  * Drush works best on Unix-like OS (Linux, OS X)
 
 II - Client
 -----------
  * PHP 5.3.3+
+ * PHP compiled with curl
  * Drush 5.0.0+
  * Drush works best on Unix-like OS (Linux, OS X)
 
@@ -147,6 +147,7 @@ Example: if your '~/.drush/aliases.drushrc.php' file looks like this:
   );
 then this command: 'drush web pm-enable field --uri=http://example.net/mysite --oauth_key=y4...HV --oauth_secret=JH...EZ'
 can be simplified like this: 'drush @mysite web pm-enable field'.
+Note that the order matters: '@mysite' must come right after 'drush' on the command line.
 
 
 Security considerations
