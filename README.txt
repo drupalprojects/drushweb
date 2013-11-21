@@ -15,12 +15,12 @@ Description
 This module allows to run Drush without being granted access to the machine it relies on.
 It may be useful on shared hosts that do not provide SSH access to servers.
 
-This module provides 2 functionalities:
+It provides 2 functionalities:
  * Server: exposes Drush as a webservice secured with OAuth.
  * Client: extends Drush by providing a client able to communicate with above mentioned webservice.
 
 Example:
- * With the traditional way, one connects to the server using SSH and runs the following: 'drush pm-enable field'.
+ * With the traditional way, one connects to a server using SSH and runs the following: 'drush pm-enable field'.
  * With this module, one uses Drush directly on a workstation and runs the following: 'drush @mysite web pm-enable field'.
 
 

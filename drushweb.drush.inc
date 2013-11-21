@@ -16,7 +16,7 @@
  */
 function drushweb_drush_command() {
   $items['webservice'] = array(
-    'description' => 'Execute the command on a site running Drush webservice Server.',
+    'description' => 'Execute the command on a server running Drush Webservice.',
     'arguments' => array(
       'command' => 'A drush command to execute on the server.',
     ),
@@ -125,7 +125,7 @@ class DrushwebHttpClient {
    * Send and interpret HTTP request.
    *
    * @param $url
-   *   URL of server running Drush webservice Server.
+   *   URL of server running Drush Webservice.
    */
   public function execute($url) {
     // Normalize url and serialize data.
