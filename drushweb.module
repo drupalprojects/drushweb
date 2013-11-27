@@ -59,8 +59,8 @@ function drushweb_execute($cmd) {
   if (!($library = libraries_detect('drush')) || empty($library['installed'])) {
     return $library['error message'];
   }
-  $bin = DRUPAL_ROOT . '/' . libraries_get_path('drush') . '/drush.php';
-  
+  $drush = DRUPAL_ROOT . '/' . libraries_get_path('drush') . '/drush.php';
+
   // Sanitize command.
   $parts = explode(' ', $cmd);
   foreach ($parts as &$part) {
@@ -68,10 +68,15 @@ function drushweb_execute($cmd) {
   }
   $cmd = implode(' ', $parts);
 
+  // Locate site URI, root path and php path.
+  global $base_url;
+  $root = DRUPAL_ROOT;
+  $php = PHP_BINDIR . '/php';
+
   // Execute command and return output.
   // --strict=0 allows to pass --drushweb=y despite it is unknown from the command.
   ob_start();
-  print shell_exec("$bin $cmd --drushweb=y --strict=0 2>&1");
+  print shell_exec("$php $drush $cmd --root=$root --uri=$base_url --drushweb=y --strict=0 2>&1");
   return ob_get_clean();
 }
 
