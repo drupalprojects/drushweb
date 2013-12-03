@@ -6,8 +6,8 @@ Summary
    48 - Quick installation
    63 - Step-by-step installation
   118 - Making the client user friendly
-  152 - Security considerations
-  161 - Support
+  153 - Security considerations
+  162 - Support
 
 
 Description
@@ -34,7 +34,7 @@ I - Server
  * services
  * libraries
  * PHP not in safe-mode (if PHP < 5.4.0)
- * Any version of Drush installed as a library is OK
+ * Drush 4.0.0+
  * Drush works best on Unix-like OS (Linux, OS X)
 
 II - Client

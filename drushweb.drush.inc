@@ -64,7 +64,8 @@ function drush_drushweb_webservice() {
   }
 
   // Format command to be sent.
-  $cmd = implode(' ', drush_get_context('DRUSH_COMMAND_ARGS'));
+  $args = drush_get_context('DRUSH_COMMAND_ARGS');
+  $cmd_json = json_encode($args);
 
   // Get credentials.
   $uri    = drush_get_option('uri');
@@ -73,8 +74,8 @@ function drush_drushweb_webservice() {
 
   // Send and process request.
   try {
-    $client = new DrushwebHttpClient($cmd, $key, $secret);
-    drush_log(dt('Sent command \'@cmd\' to @uri', array('@cmd' => $cmd, '@uri' => $uri)));
+    $client = new DrushwebHttpClient($cmd_json, $key, $secret);
+    drush_log(dt('Sent command \'@cmd\' to @uri', array('@cmd' => implode(' ', $args), '@uri' => $uri)));
     drushweb_print_response($client->execute($uri));
   }
   catch (Exception $e) {
@@ -107,7 +108,7 @@ function drushweb_print_response($body) {
 }
 
 class DrushwebHttpClient {
-  private $cmd;
+  private $cmd_json;
   private $oauth_key;
   private $oauth_secret;
   private $oauth_token = '';
@@ -115,8 +116,8 @@ class DrushwebHttpClient {
   private $http_method = 'POST';
   private $server_path = 'drushweb/drush/execute';
 
-  public function __construct($cmd, $oauth_key, $oauth_secret) {
-    $this->cmd = $cmd;
+  public function __construct($cmd_json, $oauth_key, $oauth_secret) {
+    $this->cmd_json = $cmd_json;
     $this->oauth_key = $oauth_key;
     $this->oauth_secret = $oauth_secret;
   }
@@ -130,7 +131,7 @@ class DrushwebHttpClient {
   public function execute($url) {
     // Normalize url and serialize data.
     $url = $this->normalize_http_url($url);
-    $data = json_encode($this->cmd);
+    $data = json_encode($this->cmd_json);
 
     // Build query parameters.
     $parameters = array(

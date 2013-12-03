@@ -17,8 +17,15 @@ function drushweb_requirements($phase) {
       $requirement['severity']    = REQUIREMENT_ERROR;
     }
     else {
-      $requirement['value']    = t('Detected (version @version)', array('@version' => $library['version']));
-      $requirement['severity'] = REQUIREMENT_OK;
+      $requirement['value'] = t('Detected (version @version)', array('@version' => $library['version']));
+      list($version, ) = explode('.', $library['version']);
+      if ($version < 4) {
+        $requirement['severity']    = REQUIREMENT_ERROR;
+        $requirement['description'] = t('Only Drush >= 4.0.0 is supported.');
+      }
+      else {
+        $requirement['severity'] = REQUIREMENT_OK;
+      }
     }
 
     return array('drushweb' => $requirement);

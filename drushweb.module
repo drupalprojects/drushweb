@@ -42,7 +42,7 @@ function drushweb_libraries_info() {
     'download url' => 'https://github.com/drush-ops/drush',
     'version arguments' => array(
       'file' => 'drush.info',
-      'pattern' => '@drush_version=([0-9\.a-z]+)@',
+      'pattern' => '@version=([0-9\.a-z]+)@',
       'lines' => 5,
     ),
   );
@@ -54,24 +54,33 @@ function drushweb_libraries_info() {
  *
  * Execute a Drush command and return output.
  */
-function drushweb_execute($cmd) {
+function drushweb_execute($cmd_json) {
   // Locate Drush.
   if (!($library = libraries_detect('drush')) || empty($library['installed'])) {
     return $library['error message'];
   }
+  list($version, ) = explode('.', $library['version']);
+  if ($version < 4) {
+    return t('Only Drush >= 4.0.0 is supported.');
+  }
   $drush = DRUPAL_ROOT . '/' . libraries_get_path('drush') . '/drush.php';
 
   // Sanitize command.
-  $parts = explode(' ', $cmd);
-  foreach ($parts as &$part) {
-    $part = escapeshellarg($part);
+  $args = json_decode($cmd_json);
+  foreach ($args as &$arg) {
+    $arg = escapeshellarg($arg);
   }
-  $cmd = implode(' ', $parts);
+  $cmd = implode(' ', $args);
 
   // Locate site URI, root path and php path.
   global $base_url;
   $root = DRUPAL_ROOT;
   $php = PHP_BINDIR . '/php';
+
+  // Make sure we can locate PHP.
+  if (!is_file($php)) {
+    return t('Could not locate PHP.');
+  }
 
   // Execute command and return output.
   // --strict=0 allows to pass --drushweb=y despite it is unknown from the command.
