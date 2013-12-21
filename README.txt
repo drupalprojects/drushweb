@@ -154,7 +154,7 @@ Security considerations
 =======================
 Keep in mind, despite the fact that it is secured with OAuth, that this module performs system() calls and exposes them to the Internet.
 It is strongly recommended to observe the following:
- * Only run this module on HTTPS websites. Otherwise your OAuth credentials will be sent as clear text on the Internet.
+ * Only run this module on HTTPS connections. Otherwise your OAuth credentials will be sent as clear text on the Internet. Running this module on HTTPS connections can be achieved by installing the 'securepages' module and adding 'drushweb/drush/execute' to the list of secure pages. You should accordingly set an https uri on the client.
  * Do not grant new permissions to role 'Drush Webservice OAuth user'. Hardening this role's permissions is a warranty that it can do nothing except executing Drush.
  * For similar reasons, use a dedicated user to generate OAuth credentials.
 
